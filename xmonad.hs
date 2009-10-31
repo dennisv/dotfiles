@@ -61,7 +61,7 @@ myLayoutHook  = avoidStruts $ onWorkspace "chat" chatLayout $ standardLayouts
 		chatLayout      = withIM (1%8) chatProp standardLayouts
 		chatProp        = Role "buddy_list"
 
-		tiled           = hinted (ResizableTall nmaster delta ratio [])
+		tiled           = hinted (smartBorders (ResizableTall nmaster delta ratio []))
 		full            = hinted (noBorders Full)
 
 		hinted l        = layoutHintsWithPlacement (0,0) l
@@ -71,4 +71,7 @@ myLayoutHook  = avoidStruts $ onWorkspace "chat" chatLayout $ standardLayouts
 		ratio           = toRational (2/(1 + sqrt 5 :: Double)) -- golden ratio
 myManageHook  = (composeAll . concat $
 	[ [isFullscreen             --> doFullFloat ]
+	, [className =? c			--> doCenterFloat	|  c    <- myFloats ]
 	]) <+> manageDocks
+	where
+		myFloats = ["MPlayer", "Vlc", "VirtualBox", "Xmessage", "Save As...", "XFontSel"]
