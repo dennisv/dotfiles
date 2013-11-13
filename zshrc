@@ -48,6 +48,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 DEFAULT_USER="dennis"
+export HOMEBREW_NO_EMOJI=1
 
 if [ -d /opt/boxen ]; then
   source /opt/boxen/env.sh
