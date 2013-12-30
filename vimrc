@@ -31,6 +31,12 @@ set t_Co=256
 
 colorscheme molokai
 
+" Filetype settings
+autocmd Filetype html setlocal tabstop=2 shiftwidth=2
+autocmd Filetype htmldjango setlocal tabstop=2 shiftwidth=2
+autocmd Filetype javascript setlocal tabstop=2 shiftwidth=2
+autocmd Filetype scss setlocal tabstop=2 shiftwidth=2 autoindent
+
 " Make GitGutter column the same color
 highlight clear SignColumn
 
