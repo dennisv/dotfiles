@@ -53,3 +53,5 @@ export HOMEBREW_NO_EMOJI=1
 if [ -d /opt/boxen ]; then
   source /opt/boxen/env.sh
 fi
+
+source $(brew --prefix)/bin/virtualenvwrapper.sh
