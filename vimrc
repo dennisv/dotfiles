@@ -25,6 +25,8 @@ set list
 set listchars=tab:▸\ ,eol:¬,trail:•,extends:»,precedes:«
 set colorcolumn=80
 
+set backspace=indent,eol,start
+
 set t_Co=256
 
 colorscheme molokai
