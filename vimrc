@@ -41,7 +41,7 @@ autocmd Filetype scss setlocal tabstop=2 shiftwidth=2 autoindent
 highlight clear SignColumn
 let g:gitgutter_realtime = 0
 
-" Airline settings
-let g:airline_powerline_fonts=1
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#hunks#enabled=0
+" Powerline
+python from powerline.vim import setup as powerline_setup
+python powerline_setup()
+python del powerline_setup
