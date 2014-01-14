@@ -37,8 +37,9 @@ autocmd Filetype htmldjango setlocal tabstop=2 shiftwidth=2
 autocmd Filetype javascript setlocal tabstop=2 shiftwidth=2
 autocmd Filetype scss setlocal tabstop=2 shiftwidth=2 autoindent
 
-" Make GitGutter column the same color
+" GitGutter
 highlight clear SignColumn
+let g:gitgutter_realtime = 0
 
 " Airline settings
 let g:airline_powerline_fonts=1
