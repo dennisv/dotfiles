@@ -8,10 +8,12 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="lambda"
 
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
 alias dj="python manage.py"
 alias dr="dj runserver"
+alias tmux="tmux -u"
+alias tml="tmux list-sessions"
+alias tma="tmux attach-session"
+alias tmk="tmux kill-session -t"
 
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
@@ -42,12 +44,13 @@ alias dr="dj runserver"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git brew fabric npm pip gem cloudapp vagrant)
+plugins=(git brew fabric npm pip gem cloudapp tmuxinator vagrant)
 
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 DEFAULT_USER="dennis"
+export TERM=xterm-256color
 export HOMEBREW_NO_EMOJI=1
 export EDITOR=vim
 
