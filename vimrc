@@ -29,7 +29,7 @@ set backspace=indent,eol,start
 
 set t_Co=256
 
-colorscheme molokai
+colorscheme badwolf
 
 " Filetype settings
 autocmd Filetype html setlocal tabstop=2 shiftwidth=2
