@@ -44,18 +44,18 @@ DISABLE_AUTO_UPDATE="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git brew fabric npm pip gem cloudapp tmuxinator vagrant)
+plugins=(git mercurial brew npm pip gem fabric cloudapp tmuxinator vagrant)
 
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 DEFAULT_USER="dennis"
+export LC_ALL="en_US.UTF-8"
 export TERM=xterm-256color
 export HOMEBREW_NO_EMOJI=1
 export EDITOR=vim
+export PODFILE_TYPE=development
 
 if [ -d /opt/boxen ]; then
   source /opt/boxen/env.sh
 fi
-
-source $(brew --prefix)/bin/virtualenvwrapper.sh
