@@ -1,5 +1,6 @@
 execute pathogen#infect()
 syntax on
+filetype off
 filetype plugin indent on
 
 set nocompatible
@@ -29,9 +30,12 @@ set backspace=indent,eol,start
 
 set t_Co=256
 
+set wildignore+=*/tmp/*,*.so,*.swp,*.pyc,*.zip
+
 colorscheme badwolf
 
 " Filetype settings
+autocmd Filetype python setlocal tabstop=4 shiftwidth=4
 autocmd Filetype html setlocal tabstop=2 shiftwidth=2
 autocmd Filetype htmldjango setlocal tabstop=2 shiftwidth=2
 autocmd Filetype javascript setlocal tabstop=2 shiftwidth=2
