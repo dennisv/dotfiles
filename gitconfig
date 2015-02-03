@@ -1,0 +1,36 @@
+[core]
+	excludesfile = /opt/boxen/config/git/gitignore
+
+[user]
+	name = Dennis Vermeulen
+	email = dennis@eyo.nl
+
+[credential]
+helper = /opt/boxen/bin/boxen-git-credential
+
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit
+
+[push]
+	default = simple
+
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+
+[diff]
+tool = Kaleidoscope
+
+[merge]
+tool = Kaleidoscope
+
+[difftool "Kaleidoscope"]
+cmd = ksdiff --partial-changeset --relative-path "$MERGED" -- "$LOCAL" "$REMOTE"
+
+[mergetool "Kaleidoscope"]
+cmd = ksdiff --merge --output "$MERGED" --base "$BASE" -- "$LOCAL" --snapshot "$REMOTE" --snapshot
+trustExitCode = true
+
