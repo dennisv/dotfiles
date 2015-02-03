@@ -14,10 +14,14 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle 'bkad/vim-terraform'
+NeoBundleLazy 'evanmiller/nginx-vim-syntax', {'autoload': {'filetypes': 'nginx'}}
 NeoBundle 'fatih/molokai'
 NeoBundle 'fatih/vim-go'
 NeoBundle 'Glench/Vim-Jinja2-Syntax'
 NeoBundle 'klen/python-mode'
+NeoBundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'mhinz/vim-signify'
 NeoBundle 'saltstack/salt-vim'
 NeoBundle 'sjl/badwolf'
 NeoBundle 'sjl/gundo.vim'
@@ -31,6 +35,9 @@ NeoBundle 'Shougo/vimproc.vim', {
 \     'unix' : 'gmake',
 \    },
 \ }
+NeoBundle 'Shougo/neomru.vim'
+NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-fugitive'
@@ -58,8 +65,11 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
+set number
 set relativenumber
 set cpoptions=B$
+set pastetoggle=<F10>
+
 " Folding ----------------------------------------------------------------- {{{
 
 set foldmethod=marker
@@ -124,6 +134,8 @@ nnoremap <C-l> <C-w>l
 
 nnoremap <F3> :<C-u>GundoToggle<CR>
 
+imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+
 colorscheme molokai
 
 autocmd BufWritePre * :%s/\s\+$//e
@@ -167,12 +179,17 @@ let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " python-mode
 let g:pymode = 1
+let g:pymode_lint_cwindow = 0
+let g:pymode_folding = 0
 
 " Salt.vim
 let g:sls_use_jinja_syntax = 1
 
 " Unite.vim
 let g:unite_source_history_yank_enable = 1
+let g:unite_source_grep_command = 'ag'
+let g:unite_source_grep_default_opts = '--line-numbers --nocolor --nogroup --smart-case'
+let g:unite_source_grep_recursive_opt = ''
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#custom#source('file_rec/async','sorters','sorter_rank')
@@ -198,6 +215,7 @@ nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru     -start-insert file
 nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
 nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
+nnoremap <leader>g :<C-u>Unite -no-split -buffer-name=ag      grep:.<cr>
 
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
@@ -216,6 +234,42 @@ autocmd Filetype htmldjango setlocal tabstop=2 shiftwidth=2
 autocmd Filetype javascript setlocal tabstop=2 shiftwidth=2
 autocmd Filetype json setlocal tabstop=2 shiftwidth=2
 autocmd Filetype scss setlocal tabstop=2 shiftwidth=2 autoindent
+autocmd Filetype yaml setlocal tabstop=2 shiftwidth=2 autoindent
+
+" neocomplete
+" Next generation completion framework.
+
+let g:acp_enableAtStartup = 0
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_camel_case = 1
+let g:neocomplete#enable_smart_case = 1
+
+" Default # of completions is 100, that's crazy.
+let g:neocomplete#max_list = 5
+
+" Set minimum syntax keyword length.
+let g:neocomplete#auto_completion_start_length = 3
+
+" Map standard Ctrl-N completion to Cmd-Space
+inoremap <D-Space> <C-n>
+
+" This makes sure we use neocomplete completefunc instead of
+" the one in rails.vim, otherwise this plugin will crap out.
+let g:neocomplete#force_overwrite_completefunc = 1
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+  let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
 " GitGutter
 highlight clear SignColumn
