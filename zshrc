@@ -44,7 +44,7 @@ DISABLE_AUTO_UPDATE="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git mercurial brew npm pip gem fabric cloudapp tmuxinator vagrant)
+plugins=(history-substring-search git mercurial brew npm pip gem fabric cloudapp tmuxinator vagrant)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -56,6 +56,17 @@ export HOMEBREW_NO_EMOJI=1
 export EDITOR=vim
 export PODFILE_TYPE=development
 
+export GOPATH=$HOME/src/go
+
+export PATH=$PATH:$GOPATH/bin
+export PATH=$HOME/bin:$PATH
+
+export DOCKER_HOST=tcp://192.168.59.103:2376
+export DOCKER_CERT_PATH=$HOME/.boot2docker/certs/boot2docker-vm
+export DOCKER_TLS_VERIFY=1
+
 if [ -d /opt/boxen ]; then
   source /opt/boxen/env.sh
+    source $BOXEN_HOME/homebrew/bin/virtualenvwrapper.sh
+    export WORKON_HOME=$BOXEN_DATA_DIR/virturalenvs
 fi
