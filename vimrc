@@ -13,7 +13,9 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
+NeoBundle '2072/PHP-Indenting-for-VIm'
 NeoBundle 'bkad/vim-terraform'
+NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundleLazy 'evanmiller/nginx-vim-syntax', {'autoload': {'filetypes': 'nginx'}}
 NeoBundle 'fatih/molokai'
 NeoBundle 'fatih/vim-go'
