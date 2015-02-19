@@ -13,21 +13,37 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
+NeoBundle 'matchit.zip'
 NeoBundle '2072/PHP-Indenting-for-VIm'
 NeoBundle 'bkad/vim-terraform'
+NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload':{'filetypes':['scss','sass']}}
 NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundleLazy 'evanmiller/nginx-vim-syntax', {'autoload': {'filetypes': 'nginx'}}
 NeoBundle 'fatih/molokai'
 NeoBundle 'fatih/vim-go'
 NeoBundle 'Glench/Vim-Jinja2-Syntax'
+NeoBundle 'honza/vim-snippets'
 NeoBundle 'klen/python-mode'
 NeoBundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'mhinz/vim-signify'
+NeoBundle 'mattn/emmet-vim' "{{{
+  imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+"}}}
+NeoBundle 'mhinz/vim-signify' "{{{
+  let g:signify_update_on_bufenter=0
+"}}}
+NeoBundle 'mhinz/vim-startify' "{{{
+  let g:startify_change_to_vcs_root = 1
+  let g:startify_show_sessions = 1
+  nnoremap <F1> :Startify<cr>
+"}}}
 NeoBundle 'saltstack/salt-vim'
+NeoBundle 'SirVer/ultisnips' "{{{
+  " let g:UltiSnipsExpandTrigger="<tab>"
+"}}}
 NeoBundle 'sjl/badwolf'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/unite-outline'
 NeoBundle 'Shougo/vimproc.vim', {
 \ 'build' : {
 \     'windows' : 'tools\\update-dll-mingw',
@@ -42,9 +58,17 @@ NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'tpope/vim-endwise'
+NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'bitbucket:ludovicchabant/vim-lawrencium'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-unimpaired' "{{{
+  nmap <c-up> [e
+  nmap <c-down> ]e
+  vmap <c-up> [egv
+  vmap <c-down> ]egv
+"}}}
 
 call neobundle#end()
 
@@ -126,17 +150,14 @@ set t_Co=256
 set wildignore+=*/tmp/*,*.so,*.swp,*.pyc,*.zip
 
 let mapleader = ","
+let g:mapleader = ","
 
-nnoremap j gj
-nnoremap k gk
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 nnoremap <F3> :<C-u>GundoToggle<CR>
-
-imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
 colorscheme molokai
 
@@ -192,6 +213,8 @@ let g:unite_source_history_yank_enable = 1
 let g:unite_source_grep_command = 'ag'
 let g:unite_source_grep_default_opts = '--line-numbers --nocolor --nogroup --smart-case'
 let g:unite_source_grep_recursive_opt = ''
+let g:unite_prompt='» '
+
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#custom#source('file_rec/async','sorters','sorter_rank')
@@ -202,8 +225,10 @@ call unite#custom_source('file_rec,file_rec/async,file_mru,file,buffer,grep',
       \ 'git5/.*/review/',
       \ 'google/obj/',
       \ 'tmp/',
-      \ '.sass-cache',
-      \ '.idea',
+      \ '.vagrant/',
+      \ '.sass-cache/',
+      \ '.ropeproject/',
+      \ '.idea/',
       \ '.iml',
       \ 'node_modules/',
       \ 'bower_components/',
@@ -227,9 +252,14 @@ function! s:unite_settings()
   " Enable navigation with control-j and control-k in insert mode
   imap <buffer> <C-j>   <Plug>(unite_select_next_line)
   imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+
+  nmap <buffer> <ESC> <Plug>(unite_exit)
 endfunction
 
+au BufRead,BufNewFile *.scss set filetype=scss.css
+
 " Filetype settings
+autocmd Filetype vim setlocal tabstop=2 shiftwidth=2 autoindent
 autocmd Filetype python setlocal tabstop=4 shiftwidth=4
 autocmd Filetype html setlocal tabstop=2 shiftwidth=2
 autocmd Filetype htmldjango setlocal tabstop=2 shiftwidth=2
@@ -252,8 +282,7 @@ let g:neocomplete#max_list = 5
 " Set minimum syntax keyword length.
 let g:neocomplete#auto_completion_start_length = 3
 
-" Map standard Ctrl-N completion to Cmd-Space
-inoremap <D-Space> <C-n>
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 
 " This makes sure we use neocomplete completefunc instead of
 " the one in rails.vim, otherwise this plugin will crap out.
@@ -273,11 +302,32 @@ autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
-" GitGutter
-highlight clear SignColumn
-let g:gitgutter_realtime = 0
-
 " Powerline
 python from powerline.vim import setup as powerline_setup
 python powerline_setup()
 python del powerline_setup
+
+if has('gui_running')
+    " GUI Vim
+
+    set guifont=PragmataPro:h14
+
+    " Remove all the UI cruft
+    set go-=T
+    set go-=l
+    set go-=L
+    set go-=r
+    set go-=R
+
+    highlight SpellBad term=underline gui=undercurl guisp=Orange
+
+    " Different cursors for different modes.
+    set guicursor=n-c:block-Cursor-blinkon0
+    set guicursor+=v:block-vCursor-blinkon0
+    set guicursor+=i-ci:ver20-iCursor
+
+    if has("gui_macvim")
+        " Full screen means FULL screen
+        set fuoptions=maxvert,maxhorz
+    end
+endif
