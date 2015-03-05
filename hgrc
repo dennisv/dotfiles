@@ -1,0 +1,27 @@
+[ui]
+username = Dennis Vermeulen <dennis@eyo.nl>
+merge = Kaleidoscope
+ignore = ~/.hgignore_global
+
+[merge-tools]
+Kaleidoscope.executable = /usr/local/bin/ksdiff
+Kaleidoscope.args = --merge --output $output --base $base -- $local $other
+
+[alias]
+lg = log -G --template "{label('custom.rev',node|short)} - {if(bookmarks,'(')}{label('custom.bm',bookmarks)}{if(bookmarks,') ')}{desc|firstline} ({label('custom.date',date|age)}) <{label('custom.author',author|person)}>" -b .
+
+[extensions]
+color =
+fetch =
+hgext.extdiff =
+hggit =
+
+[color]
+custom.rev = red
+custom.bm = yellow
+custom.date = green
+custom.author = blue
+
+[extdiff]
+cmd.ksdiff = /usr/local/bin/ksdiff
+opts.ksdiff = --changeset --wait --filelist
