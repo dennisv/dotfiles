@@ -1,5 +1,8 @@
 *.pyc
 .ropeproject
 
+vim/bundle
+!vim/bundle/neobundle.vim
+
 mutt/temp
 mutt/cache
