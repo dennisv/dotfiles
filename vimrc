@@ -14,6 +14,10 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle 'matchit.zip'
+NeoBundle 'bling/vim-airline' "{{{
+  let g:airline_powerline_fonts = 1
+  let g:airline_theme = 'powerlineish'
+"}}}
 NeoBundle '2072/PHP-Indenting-for-VIm'
 NeoBundle 'bkad/vim-terraform'
 NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload':{'filetypes':['scss','sass']}}
@@ -24,7 +28,6 @@ NeoBundle 'fatih/vim-go'
 NeoBundle 'Glench/Vim-Jinja2-Syntax'
 NeoBundle 'honza/vim-snippets'
 NeoBundle 'klen/python-mode'
-NeoBundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 NeoBundle 'mattn/emmet-vim' "{{{
   imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 "}}}
@@ -301,11 +304,6 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-
-" Powerline
-python from powerline.vim import setup as powerline_setup
-python powerline_setup()
-python del powerline_setup
 
 if has('gui_running')
     " GUI Vim
