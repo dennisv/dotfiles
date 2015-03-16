@@ -101,6 +101,11 @@ alias tml="tmux list-sessions"
 alias tma="tmux attach-session"
 alias tmk="tmux kill-session -t"
 
+export WORKON_HOME=$HOME/.virtualenvs
+source /usr/local/bin/virtualenvwrapper.sh
+
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
 if [ -d /opt/boxen ]; then
   source /opt/boxen/env.sh
     source $BOXEN_HOME/homebrew/bin/virtualenvwrapper.sh
