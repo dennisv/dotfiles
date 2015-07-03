@@ -13,6 +13,7 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
+NeoBundle '~/.vim/bundle/django-custom'
 NeoBundle 'matchit.zip'
 NeoBundle 'bling/vim-airline' "{{{
   let g:airline_powerline_fonts = 1
@@ -25,9 +26,15 @@ NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundleLazy 'evanmiller/nginx-vim-syntax', {'autoload': {'filetypes': 'nginx'}}
 NeoBundle 'fatih/molokai'
 NeoBundle 'fatih/vim-go'
-NeoBundle 'Glench/Vim-Jinja2-Syntax'
 NeoBundle 'honza/vim-snippets'
-NeoBundle 'klen/python-mode'
+NeoBundleLazy 'klen/python-mode', {'autoload':{'filetypes':['python']}} "{{{
+  let g:pymode_rope=0
+  let g:pymode_folding=0
+"}}}
+NeoBundleLazy 'davidhalter/jedi-vim', {'autoload':{'filetypes':['python']}} "{{{
+  let g:jedi#popup_on_dot=0
+  let g:jedi#use_tabs_not_buffers=0
+"}}}
 NeoBundle 'mattn/emmet-vim' "{{{
   imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 "}}}
@@ -39,14 +46,55 @@ NeoBundle 'mhinz/vim-startify' "{{{
   let g:startify_show_sessions = 1
   nnoremap <F1> :Startify<cr>
 "}}}
+NeoBundle 'mxw/vim-jsx'
+NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'saltstack/salt-vim'
 NeoBundle 'SirVer/ultisnips' "{{{
-  " let g:UltiSnipsExpandTrigger="<tab>"
+  let g:UltiSnipsExpandTrigger="<tab>"
+  let g:UltiSnipsJumpForwardTrigger="<tab>"
+  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+  let g:UltiSnipsSnippetsDir='~/.vim/snippets'
 "}}}
 NeoBundle 'sjl/badwolf'
 NeoBundle 'sjl/gundo.vim'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/unite.vim' "{{{
+  let g:unite_source_history_yank_enable=1
+  let g:unite_prompt='» '
+
+  if executable('ag')
+    let g:unite_source_rec_async_command='ag --nocolor --nogroup --ignore ".hg" --ignore ".svn" --ignore ".git" --ignore ".bzr" --hidden -g ""'
+    let g:unite_source_grep_command='ag'
+    let g:unite_source_grep_default_opts='--nocolor --line-numbers --nogroup --smart-case'
+    let g:unite_source_grep_recursive_opt=''
+  elseif executable('ack')
+    let g:unite_source_grep_command='ack'
+    let g:unite_source_grep_default_opts='--no-heading --no-color'
+    let g:unite_source_grep_recursive_opt=''
+  endif
+
+  function! s:unite_settings()
+    imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+    imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+
+    nmap <buffer> Q <plug>(unite_exit)
+    nmap <buffer> <esc> <plug>(unite_exit)
+    imap <buffer> <esc> <plug>(unite_exit)
+  endfunction
+  autocmd FileType unite call s:unite_settings()
+
+  nmap <space> [unite]
+  nnoremap [unite] <nop>
+
+  nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
+  nnoremap <silent> [unite]e :<C-u>Unite -buffer-name=recent file_mru<cr>
+  nnoremap <silent> [unite]y :<C-u>Unite -buffer-name=yanks history/yank<cr>
+  nnoremap <silent> [unite]b :<C-u>Unite -auto-resize -buffer-name=buffers buffer<cr>
+  nnoremap <silent> [unite]/ :<C-u>Unite -no-quit -buffer-name=search grep:.<cr>
+  nnoremap <silent> [unite]s :<C-u>Unite -quick-match buffer<cr>
+"}}}
+NeoBundleLazy 'Shougo/unite-outline', {'autoload':{'unite_sources':'outline'}} "{{{
+  nnoremap <silent> [unite]o :<C-u>Unite -auto-resize -buffer-name=outline outline<cr>
+"}}}
 NeoBundle 'Shougo/vimproc.vim', {
 \ 'build' : {
 \     'windows' : 'tools\\update-dll-mingw',
@@ -56,7 +104,7 @@ NeoBundle 'Shougo/vimproc.vim', {
 \     'unix' : 'gmake',
 \    },
 \ }
-NeoBundle 'Shougo/neomru.vim'
+NeoBundle 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
 NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'terryma/vim-multiple-cursors'
@@ -105,8 +153,8 @@ set foldmethod=marker
 set foldlevelstart=0
 
 " Space to toggle folds.
-nnoremap <Space> za
-vnoremap <Space> za
+nnoremap <space><space> za
+vnoremap <space><space> za
 
 " Make zO recursively open whatever fold we're in, even if it's partially open.
 nnoremap zO zczO
@@ -145,6 +193,10 @@ set foldtext=MyFoldText()
 set list
 set listchars=tab:▸\ ,eol:¬,trail:•,extends:»,precedes:«
 set colorcolumn=80
+
+set cursorline
+autocmd WinLeave * setlocal nocursorline
+autocmd WinEnter * setlocal cursorline
 
 set backspace=indent,eol,start
 
@@ -203,23 +255,12 @@ command! -nargs=0 Pulse call s:Pulse()
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
-" python-mode
-let g:pymode = 1
-let g:pymode_lint_cwindow = 0
-let g:pymode_folding = 0
-
-" Salt.vim
-let g:sls_use_jinja_syntax = 1
-
 " Unite.vim
-let g:unite_source_history_yank_enable = 1
-let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts = '--line-numbers --nocolor --nogroup --smart-case'
-let g:unite_source_grep_recursive_opt = ''
-let g:unite_prompt='» '
-
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
+call unite#custom#profile('default', 'context', {
+      \ 'start_insert': 1
+      \ })
 call unite#custom#source('file_rec/async','sorters','sorter_rank')
 call unite#custom_source('file_rec,file_rec/async,file_mru,file,buffer,grep',
       \ 'ignore_pattern', join([
@@ -239,27 +280,9 @@ call unite#custom_source('file_rec,file_rec/async,file_mru,file,buffer,grep',
       \ '.git5_specs/',
       \ '.pyc',
       \ ], '\|'))
-nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
-nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
-nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru     -start-insert file_mru<cr>
-nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
-nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
-nnoremap <leader>g :<C-u>Unite -no-split -buffer-name=ag      grep:.<cr>
-
-" Custom mappings for the unite buffer
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-  " Play nice with supertab
-  let b:SuperTabDisabled=1
-  " Enable navigation with control-j and control-k in insert mode
-  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
-
-  nmap <buffer> <ESC> <Plug>(unite_exit)
-endfunction
 
 au BufRead,BufNewFile *.scss set filetype=scss.css
+au BufNewFile,BufRead *.html setlocal filetype=htmldjango
 
 " Filetype settings
 autocmd Filetype vim setlocal tabstop=2 shiftwidth=2 autoindent
@@ -304,6 +327,12 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+
+autocmd FileType scss,css nnoremap <buffer> <F5> :call CSScomb()<CR>
+function! CSScomb()
+  execute "silent !csscomb " . expand('%')
+  redraw!
+endfunction
 
 if has('gui_running')
     " GUI Vim
