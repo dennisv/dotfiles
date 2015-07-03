@@ -2,5 +2,6 @@ syntax: glob
 
 *~
 *.swp
+*.pyc
 .ropeproject
 .DS_Store

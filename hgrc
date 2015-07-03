@@ -7,13 +7,12 @@ ignore = ~/.hgignore_global
 Kaleidoscope.executable = /usr/local/bin/ksdiff
 Kaleidoscope.args = --merge --output $output --base $base -- $local $other
 
-[alias]
-lg = log -G --template "{label('custom.rev',node|short)} - {if(bookmarks,'(')}{label('custom.bm',bookmarks)}{if(bookmarks,') ')}{desc|firstline} ({label('custom.date',date|age)}) <{label('custom.author',author|person)}>" -b .
-
 [extensions]
+graphlog =
 color =
+progress =
 fetch =
-hgext.extdiff =
+extdiff =
 hggit =
 
 [color]
@@ -22,6 +21,44 @@ custom.bm = yellow
 custom.date = green
 custom.author = blue
 
+[diff]
+git = True
+
 [extdiff]
 cmd.ksdiff = /usr/local/bin/ksdiff
 opts.ksdiff = --changeset --wait --filelist
+
+[alias]
+fe = fetch -m "Automatic merge"
+
+lg = log -G --template "{label('custom.rev',node|short)} - {if(bookmarks,'(')}{label('custom.bm',bookmarks)}{if(bookmarks,') ')}{desc|firstline} ({label('custom.date',date|age)}) <{label('custom.author',author|person)}>" -b .
+
+# Kaleidoscope
+# Mnemonics: "kaleidoscope diff" and "kaleidoscope show"
+kd = !/usr/local/bin/hg ksdiff $@
+ks = !/usr/local/bin/hg ksdiff -c $@
+
+# Run hg commands on all subrepos at once.
+subs  = !"$HG" debugsub | grep '^path' | cut -d' ' -f2 | xargs    -n1  -I SUB $HG -R "`$HG root`/SUB" $@
+psubs = !"$HG" debugsub | grep '^path' | cut -d' ' -f2 | parallel -j10 -I SUB $HG -R "`$HG root`/SUB" $@
+
+# Run shell commands on all subrepos at once.
+subscmd  = !"$HG" debugsub | grep '^path' | cut -d' ' -f2 | xargs    -n1  -I SUB sh -c "cd `$HG root`/SUB && $@"
+psubscmd = !"$HG" debugsub | grep '^path' | cut -d' ' -f2 | parallel -j10 -I SUB sh -c "cd `$HG root`/SUB && $@"
+
+# Run a command on a subrepo:
+#
+#     hg sub SUBREPO_REGEX ...command and arguments...
+#
+# The SUBREPO_REGEX should be a regex that will let grep match one and only one of
+# the subrepos in .hgsub.  For example:
+#
+#     $ cat .hgsub
+#     bundled/foo = ...
+#     bundled/bar = ...
+#
+#     $ hg sub fo root
+#     .../bundled/foo
+#     $ hg sub ar status -m
+#     M lol.py
+sub = !grep = "`$HG root`/.hgsub" | cut -d' ' -f1 | grep "$1" | tr -d '\n ' | xargs -0 -I SUB $HG -R SUB $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 $12 $13 $14 $15 $16 $17 $18 $19 $20
