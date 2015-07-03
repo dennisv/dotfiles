@@ -90,6 +90,15 @@ hs.hotkey.bind(mash, "L", function()
   win:setFrame(f)
 end)
 
+hs.hotkey.bind(mash, "F", function()
+  local win = hs.window.focusedWindow()
+  local f = win:frame()
+  local screen = win:screen()
+  local max = screen:frame()
+
+  win:setFrame(max)
+end)
+
 hs.hotkey.bind(mash, "T", hs.hints.windowHints)
 
 function reload_config(files)
