@@ -80,6 +80,7 @@ export PODFILE_TYPE=development
 export GOPATH=$HOME/src/go
 
 export PATH=$PATH:$GOPATH/bin
+export PATH=/usr/texbin:$PATH
 export PATH=$HOME/bin:$PATH
 
 export DOCKER_HOST=tcp://192.168.59.103:2376
