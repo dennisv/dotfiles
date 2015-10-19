@@ -49,7 +49,7 @@ plugins=(history-substring-search git mercurial brew npm pip gem fabric cloudapp
 
 # User configuration
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="$HOME/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -77,11 +77,11 @@ export HOMEBREW_NO_EMOJI=1
 export EDITOR=vim
 export PODFILE_TYPE=development
 
-export GOPATH=$HOME/src/go
+export GOPATH=$HOME/Src/go
 
+export PATH=$HOME/.local/bin:$PATH
 export PATH=$PATH:$GOPATH/bin
 export PATH=/usr/texbin:$PATH
-export PATH=$HOME/bin:$PATH
 
 export DOCKER_HOST=tcp://192.168.59.103:2376
 export DOCKER_CERT_PATH=$HOME/.boot2docker/certs/boot2docker-vm
@@ -95,12 +95,14 @@ export DOCKER_TLS_VERIFY=1
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias got="ps aux | grep"
 alias dj="python manage.py"
 alias dr="dj runserver"
 alias tmux="tmux -u"
 alias tml="tmux list-sessions"
 alias tma="tmux attach-session"
 alias tmk="tmux kill-session -t"
+alias gmacs="open -a Emacs"
 
 export WORKON_HOME=$HOME/.virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh

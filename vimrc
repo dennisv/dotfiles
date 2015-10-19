@@ -11,6 +11,8 @@ filetype off
 
 call neobundle#begin(expand('~/.vim/bundle/'))
 
+let g:neobundle#install_process_timeout = 1500
+
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle '~/.vim/bundle/django-custom'
@@ -26,6 +28,7 @@ NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundleLazy 'evanmiller/nginx-vim-syntax', {'autoload': {'filetypes': 'nginx'}}
 NeoBundle 'fatih/molokai'
 NeoBundle 'fatih/vim-go'
+NeoBundle 'fisadev/vim-isort', {'autoload':{'filetypes':['python']}}
 NeoBundle 'honza/vim-snippets'
 NeoBundleLazy 'klen/python-mode', {'autoload':{'filetypes':['python']}} "{{{
   let g:pymode_rope=0
@@ -48,52 +51,60 @@ NeoBundle 'mhinz/vim-startify' "{{{
 "}}}
 NeoBundle 'mxw/vim-jsx'
 NeoBundle 'pangloss/vim-javascript'
+NeoBundleLazy 'peterhoeg/vim-qml', {'autoload': {'filetypes': 'qml'}}
 NeoBundle 'saltstack/salt-vim'
 NeoBundle 'SirVer/ultisnips' "{{{
-  let g:UltiSnipsExpandTrigger="<tab>"
-  let g:UltiSnipsJumpForwardTrigger="<tab>"
-  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-  let g:UltiSnipsSnippetsDir='~/.vim/snippets'
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsSnippetsDir='~/.vim/snippets'
 "}}}
 NeoBundle 'sjl/badwolf'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'Shougo/unite.vim' "{{{
-  let g:unite_source_history_yank_enable=1
-  let g:unite_prompt='» '
+let g:unite_source_history_yank_enable=1
+let g:unite_prompt='» '
 
-  if executable('ag')
-    let g:unite_source_rec_async_command='ag --nocolor --nogroup --ignore ".hg" --ignore ".svn" --ignore ".git" --ignore ".bzr" --hidden -g ""'
-    let g:unite_source_grep_command='ag'
-    let g:unite_source_grep_default_opts='--nocolor --line-numbers --nogroup --smart-case'
-    let g:unite_source_grep_recursive_opt=''
-  elseif executable('ack')
-    let g:unite_source_grep_command='ack'
-    let g:unite_source_grep_default_opts='--no-heading --no-color'
-    let g:unite_source_grep_recursive_opt=''
-  endif
+" if executable('pt')
+"   let g:unite_source_rec_async_command='pt --nocolor --nogroup --ignore ".hg" --ignore ".svn" --ignore ".git" --ignore ".bzr" --hidden -g .'
+"   let g:unite_source_grep_command = 'pt'
+"   let g:unite_source_grep_default_opts = '--nogroup --nocolor'
+"   let g:unite_source_grep_recursive_opt = ''
+"   let g:unite_source_grep_encoding = 'utf-8'
+" elseif executable('ag')
+if executable('ag')
+  let g:unite_source_rec_async_command=['ag', '--nocolor', '--nogroup', '--ignore', '".hg"', '--ignore', '".svn"', '--ignore', '".git"', '--ignore', '".bzr"', '--hidden', '-g', '']
+  let g:unite_source_grep_command='ag'
+  let g:unite_source_grep_default_opts='-i --vimgrep --hidden --ignore ".hg" --ignore ".svn" --ignore ".git" --ignore ".bzr"'
+  let g:unite_source_grep_recursive_opt=''
+elseif executable('ack')
+  let g:unite_source_grep_command='ack'
+  let g:unite_source_grep_default_opts='--no-heading --no-color'
+  let g:unite_source_grep_recursive_opt=''
+endif
 
-  function! s:unite_settings()
-    imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-    imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+function! s:unite_settings()
+  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
 
-    nmap <buffer> Q <plug>(unite_exit)
-    nmap <buffer> <esc> <plug>(unite_exit)
-    imap <buffer> <esc> <plug>(unite_exit)
-  endfunction
-  autocmd FileType unite call s:unite_settings()
+  nmap <buffer> Q <plug>(unite_exit)
+  nmap <buffer> <esc> <plug>(unite_exit)
+  imap <buffer> <esc> <plug>(unite_exit)
+endfunction
+autocmd FileType unite call s:unite_settings()
 
-  nmap <space> [unite]
-  nnoremap [unite] <nop>
+nmap <space> [unite]
+nnoremap [unite] <nop>
 
-  nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
-  nnoremap <silent> [unite]e :<C-u>Unite -buffer-name=recent file_mru<cr>
-  nnoremap <silent> [unite]y :<C-u>Unite -buffer-name=yanks history/yank<cr>
-  nnoremap <silent> [unite]b :<C-u>Unite -auto-resize -buffer-name=buffers buffer<cr>
-  nnoremap <silent> [unite]/ :<C-u>Unite -no-quit -buffer-name=search grep:.<cr>
-  nnoremap <silent> [unite]s :<C-u>Unite -quick-match buffer<cr>
+nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
+nnoremap <silent> [unite]e :<C-u>Unite -buffer-name=recent file_mru<cr>
+nnoremap <silent> [unite]y :<C-u>Unite -buffer-name=yanks history/yank<cr>
+nnoremap <silent> [unite]b :<C-u>Unite -auto-resize -buffer-name=buffers buffer<cr>
+nnoremap <silent> [unite]/ :<C-u>Unite -no-quit -buffer-name=search grep:.<cr>
+nnoremap <silent> [unite]s :<C-u>Unite -quick-match buffer<cr>
 "}}}
 NeoBundleLazy 'Shougo/unite-outline', {'autoload':{'unite_sources':'outline'}} "{{{
-  nnoremap <silent> [unite]o :<C-u>Unite -auto-resize -buffer-name=outline outline<cr>
+nnoremap <silent> [unite]o :<C-u>Unite -auto-resize -buffer-name=outline outline<cr>
 "}}}
 NeoBundle 'Shougo/vimproc.vim', {
 \ 'build' : {
@@ -105,7 +116,6 @@ NeoBundle 'Shougo/vimproc.vim', {
 \    },
 \ }
 NeoBundle 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
-NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'tpope/vim-endwise'
@@ -119,6 +129,19 @@ NeoBundle 'tpope/vim-unimpaired' "{{{
   nmap <c-down> ]e
   vmap <c-up> [egv
   vmap <c-down> ]egv
+"}}}
+NeoBundle 'Valloric/YouCompleteMe', {
+     \ 'build'      : {
+        \ 'mac'     : './install.sh --clang-completer --system-libclang --gocode-completer',
+        \ 'unix'    : './install.sh --clang-completer --system-libclang --gocode-completer',
+        \ 'windows' : './install.sh --clang-completer --system-libclang --gocode-completer',
+        \ 'cygwin'  : './install.sh --clang-completer --system-libclang --gocode-completer'
+        \ }
+     \ } "{{{
+  let g:ycm_complete_in_comments_and_strings=1
+  let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
+  let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
+  let g:ycm_filetype_blacklist={'unite': 1}
 "}}}
 
 call neobundle#end()
@@ -281,8 +304,9 @@ call unite#custom_source('file_rec,file_rec/async,file_mru,file,buffer,grep',
       \ '.pyc',
       \ ], '\|'))
 
-au BufRead,BufNewFile *.scss set filetype=scss.css
+au BufNewFile,BufRead *.scss set filetype=scss.css
 au BufNewFile,BufRead *.html setlocal filetype=htmldjango
+au BufNewFile,BufRead *.qml setlocal filetype=qml
 
 " Filetype settings
 autocmd Filetype vim setlocal tabstop=2 shiftwidth=2 autoindent
@@ -293,40 +317,6 @@ autocmd Filetype javascript setlocal tabstop=2 shiftwidth=2
 autocmd Filetype json setlocal tabstop=2 shiftwidth=2
 autocmd Filetype scss setlocal tabstop=2 shiftwidth=2 autoindent
 autocmd Filetype yaml setlocal tabstop=2 shiftwidth=2 autoindent
-
-" neocomplete
-" Next generation completion framework.
-
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_camel_case = 1
-let g:neocomplete#enable_smart_case = 1
-
-" Default # of completions is 100, that's crazy.
-let g:neocomplete#max_list = 5
-
-" Set minimum syntax keyword length.
-let g:neocomplete#auto_completion_start_length = 3
-
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-
-" This makes sure we use neocomplete completefunc instead of
-" the one in rails.vim, otherwise this plugin will crap out.
-let g:neocomplete#force_overwrite_completefunc = 1
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-  let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
 autocmd FileType scss,css nnoremap <buffer> <F5> :call CSScomb()<CR>
 function! CSScomb()
