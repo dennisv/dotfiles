@@ -17,9 +17,17 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle '~/.vim/bundle/django-custom'
 NeoBundle 'matchit.zip'
+NeoBundle 'benekastah/neomake' "{{{
+  let s:eslint_path = system('PATH=$(npm bin):$PATH && which eslint')
+  let g:neomake_javascript_eslint_exe = substitute(s:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+
+  " Run Neomake on every file write
+  autocmd! BufWritePost * Neomake
+"}}}
 NeoBundle 'bling/vim-airline' "{{{
   let g:airline_powerline_fonts = 1
   let g:airline_theme = 'powerlineish'
+  let g:airline#extensions#tabline#fnamemod = ':t'
 "}}}
 NeoBundle '2072/PHP-Indenting-for-VIm'
 NeoBundle 'bkad/vim-terraform'
@@ -54,10 +62,10 @@ NeoBundle 'pangloss/vim-javascript'
 NeoBundleLazy 'peterhoeg/vim-qml', {'autoload': {'filetypes': 'qml'}}
 NeoBundle 'saltstack/salt-vim'
 NeoBundle 'SirVer/ultisnips' "{{{
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-let g:UltiSnipsSnippetsDir='~/.vim/snippets'
+  let g:UltiSnipsExpandTrigger="<tab>"
+  let g:UltiSnipsJumpForwardTrigger="<tab>"
+  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+  let g:UltiSnipsSnippetsDir='~/.vim/snippets'
 "}}}
 NeoBundle 'sjl/badwolf'
 NeoBundle 'sjl/gundo.vim'
@@ -118,7 +126,8 @@ NeoBundle 'Shougo/vimproc.vim', {
 NeoBundle 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'tpope/vim-endwise'
+NeoBundle 'blacktorn/vim-endwise'
+NeoBundle 'ternjs/tern_for_vim', {'build': {'mac': 'npm install'}}
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'bitbucket:ludovicchabant/vim-lawrencium'
@@ -226,6 +235,7 @@ set backspace=indent,eol,start
 set t_Co=256
 
 set wildignore+=*/tmp/*,*.so,*.swp,*.pyc,*.zip
+set backupdir=~/.backups,~/.tmp,~/tmp,/var/tmp,/tmp
 
 let mapleader = ","
 let g:mapleader = ","

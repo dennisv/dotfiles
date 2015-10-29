@@ -105,7 +105,7 @@ alias tmk="tmux kill-session -t"
 alias gmacs="open -a Emacs"
 
 export WORKON_HOME=$HOME/.virtualenvs
-source /usr/local/bin/virtualenvwrapper.sh
+source /usr/local/bin/virtualenvwrapper_lazy.sh
 
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
