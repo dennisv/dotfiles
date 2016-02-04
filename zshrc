@@ -5,7 +5,7 @@ export ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="lambda"
+ZSH_THEME="norm"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -45,7 +45,7 @@ ZSH_THEME="lambda"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(history-substring-search git mercurial brew npm pip gem fabric cloudapp tmuxinator vagrant)
+plugins=(history-substring-search git mercurial brew npm pip gem fabric cloudapp tmuxinator vagrant zsh-syntax-highlighting)
 
 # User configuration
 
@@ -73,7 +73,7 @@ export LANG=en_US.UTF-8
 # Customize to your needs...
 DEFAULT_USER="dennis"
 export TERM=xterm-256color
-export HOMEBREW_NO_EMOJI=1
+export HOMEBREW_INSTALL_BADGE="🤖"
 export EDITOR=vim
 export PODFILE_TYPE=development
 
