@@ -5,3 +5,4 @@ syntax: glob
 *.pyc
 .ropeproject
 .DS_Store
+.tern-port
