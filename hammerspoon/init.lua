@@ -126,12 +126,12 @@ function drawBorder()
     border:show()
 end
 
-drawBorder()
+-- drawBorder()
 
-windows = hs.window.filter.new(nil)
-windows:subscribe(hs.window.filter.windowFocused, function () drawBorder() end)
-windows:subscribe(hs.window.filter.windowUnfocused, function () drawBorder() end)
-windows:subscribe(hs.window.filter.windowMoved, function () drawBorder() end)
+-- windows = hs.window.filter.new(nil)
+-- windows:subscribe(hs.window.filter.windowFocused, function () drawBorder() end)
+-- windows:subscribe(hs.window.filter.windowUnfocused, function () drawBorder() end)
+-- windows:subscribe(hs.window.filter.windowMoved, function () drawBorder() end)
 
 function reload_config(files)
     caffeine:delete()

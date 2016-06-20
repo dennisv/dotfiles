@@ -20,11 +20,14 @@ NeoBundle 'matchit.zip'
 NeoBundle 'benekastah/neomake' "{{{
   let s:eslint_path = system('PATH=$(npm bin):$PATH && which eslint')
   let g:neomake_javascript_eslint_exe = substitute(s:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+  let g:neomake_javascript_enabled_makers = ['eslint']
+  let g:neomake_jsx_enabled_makers = ['eslint']
 
   " Run Neomake on every file write
   autocmd! BufWritePost * Neomake
 "}}}
-NeoBundle 'bling/vim-airline' "{{{
+NeoBundle 'vim-airline/vim-airline-themes'
+NeoBundle 'vim-airline/vim-airline' "{{{
   let g:airline_powerline_fonts = 1
   let g:airline_theme = 'powerlineish'
   let g:airline#extensions#tabline#fnamemod = ':t'
@@ -141,10 +144,10 @@ NeoBundle 'tpope/vim-unimpaired' "{{{
 "}}}
 NeoBundle 'Valloric/YouCompleteMe', {
      \ 'build'      : {
-        \ 'mac'     : './install.sh --clang-completer --system-libclang --gocode-completer',
-        \ 'unix'    : './install.sh --clang-completer --system-libclang --gocode-completer',
-        \ 'windows' : './install.sh --clang-completer --system-libclang --gocode-completer',
-        \ 'cygwin'  : './install.sh --clang-completer --system-libclang --gocode-completer'
+        \ 'mac'     : './install.py --clang-completer --system-libclang --gocode-completer',
+        \ 'unix'    : './install.py --clang-completer --system-libclang --gocode-completer',
+        \ 'windows' : './install.py --clang-completer --system-libclang --gocode-completer',
+        \ 'cygwin'  : './install.py --clang-completer --system-libclang --gocode-completer'
         \ }
      \ } "{{{
   let g:ycm_complete_in_comments_and_strings=1
@@ -152,12 +155,15 @@ NeoBundle 'Valloric/YouCompleteMe', {
   let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
   let g:ycm_filetype_blacklist={'unite': 1}
 "}}}
+NeoBundle 'vim-scripts/Unicode-RST-Tables'
 
 call neobundle#end()
 
 filetype plugin indent on
 
 NeoBundleCheck
+
+let g:python_host_prog='/usr/local/bin/python'
 
 syntax on
 
@@ -285,8 +291,12 @@ command! -nargs=0 Pulse call s:Pulse()
 " }}}
 
 " Switch from block-cursor to vertical-line-cursor when going into/out of insert mode
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+if has('nvim')
+  let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+else
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
 
 " Unite.vim
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
@@ -335,26 +345,26 @@ function! CSScomb()
 endfunction
 
 if has('gui_running')
-    " GUI Vim
+  " GUI Vim
 
-    set guifont=PragmataPro:h14
+  set guifont=PragmataPro:h14
 
-    " Remove all the UI cruft
-    set go-=T
-    set go-=l
-    set go-=L
-    set go-=r
-    set go-=R
+  " Remove all the UI cruft
+  set go-=T
+  set go-=l
+  set go-=L
+  set go-=r
+  set go-=R
 
-    highlight SpellBad term=underline gui=undercurl guisp=Orange
+  highlight SpellBad term=underline gui=undercurl guisp=Orange
 
-    " Different cursors for different modes.
-    set guicursor=n-c:block-Cursor-blinkon0
-    set guicursor+=v:block-vCursor-blinkon0
-    set guicursor+=i-ci:ver20-iCursor
+  " Different cursors for different modes.
+  set guicursor=n-c:block-Cursor-blinkon0
+  set guicursor+=v:block-vCursor-blinkon0
+  set guicursor+=i-ci:ver20-iCursor
 
-    if has("gui_macvim")
-        " Full screen means FULL screen
-        set fuoptions=maxvert,maxhorz
-    end
+  if has("gui_macvim")
+    " Full screen means FULL screen
+    set fuoptions=maxvert,maxhorz
+  end
 endif

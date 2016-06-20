@@ -29,16 +29,19 @@ values."
      markdown
      org
      javascript
-     react
+     ;; react
      html
      python
      php
+     go
      vagrant
+     salt
      (shell :variables
             shell-default-shell 'eshell
             shell-default-height 30
             shell-default-position 'bottom)
      ;; spell-checking
+     haskell
      evil-commentary
      vim-empty-lines
      syntax-checking
@@ -54,7 +57,6 @@ values."
    dotspacemacs-additional-packages
    '(
      systemd
-     salt-mode
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -85,7 +87,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
@@ -224,7 +226,15 @@ user code."
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
+  ;; set frame title to buffer filename
+  (setq frame-title-format
+        '("Spacemacs_ "
+          (:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b"))))
+
   (setq powerline-default-separator nil)
+  (spaceline-compile)
 
   ;; disable jshint since we prefer eslint checking
   ;; (setq-default flycheck-disabled-checkers

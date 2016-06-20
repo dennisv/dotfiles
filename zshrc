@@ -49,7 +49,7 @@ plugins=(history-substring-search git mercurial brew npm pip gem fabric cloudapp
 
 # User configuration
 
-export PATH="$HOME/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="$HOME/.bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -109,8 +109,4 @@ source /usr/local/bin/virtualenvwrapper_lazy.sh
 
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
-if [ -d /opt/boxen ]; then
-  source /opt/boxen/env.sh
-    source $BOXEN_HOME/homebrew/bin/virtualenvwrapper.sh
-    export WORKON_HOME=$BOXEN_DATA_DIR/virturalenvs
-fi
+[ -f ~/.nix-profile/etc/profile.d/nix.sh ] && source ~/.nix-profile/etc/profile.d/nix.sh

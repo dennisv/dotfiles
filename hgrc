@@ -15,6 +15,7 @@ fetch =
 extdiff =
 hggit =
 rebase =
+shelve =
 prompt = ~/Src/hg-prompt/prompt.py
 
 [color]
