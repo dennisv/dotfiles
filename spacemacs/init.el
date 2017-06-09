@@ -18,37 +18,43 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
      auto-completion
+     colors
+     django
+     docker
+     dv-javascript
+     editorconfig
      emacs-lisp
+     evil-commentary
+     ;; evil-snipe
+     finance
+     frame-geometry
      git
+     (go :variables
+         go-tab-width 2)
+     haskell
+     html
+     ;; ivy
+     ;; javascript
+     latex
      markdown
      org
-     javascript
+     osx
+     (python :variables
+             python-enable-yapf-format-on-save t
+             python-sort-imports-on-save t)
      ;; react
-     html
-     python
-     php
-     go
-     vagrant
      salt
      (shell :variables
-            shell-default-shell 'eshell
-            shell-default-height 30
-            shell-default-position 'bottom)
-     ;; spell-checking
-     haskell
-     evil-commentary
-     vim-empty-lines
+            shell-default-shell 'ansi-term)
+     sql
      syntax-checking
-     finance
-     version-control
-     osx
+     terraform
      themes-megapack
+     vagrant
+     (version-control :variables
+                      version-control-diff-tool 'diff-hl)
+     vim-empty-lines
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -95,12 +101,13 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(darktooth
+   dotspacemacs-themes '(sanityinc-tomorrow-eighties
+                         gruvbox
+                         leuven
+                         darktooth
                          spacemacs-dark
                          spacemacs-light
                          solarized-light
-                         solarized-dark
-                         leuven
                          monokai
                          zenburn)
    ;; If non nil the cursor color matches the state color.
@@ -197,9 +204,9 @@ values."
    ;; (default nil)
    dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
-   ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
-   ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
+   ;; (default '("rg" "ag" "pt" "ack" "grep"))
+   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
@@ -210,15 +217,6 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
-    (setq-default
-     ;; js2-mode
-     js2-basic-offset 2
-     ;; web-mode
-     css-indent-offset 2
-     web-mode-markup-indent-offset 2
-     web-mode-css-indent-offset 2
-     web-mode-code-indent-offset 2
-     web-mode-attr-indent-offset 2)
   )
 
 (defun dotspacemacs/user-config ()
@@ -236,20 +234,67 @@ layers configuration. You are free to put any user code."
   (setq powerline-default-separator nil)
   (spaceline-compile)
 
+  (setq-default
+   ;; js2-mode
+   js2-basic-offset 2
+   ;; web-mode
+   css-indent-offset 2
+   web-mode-markup-indent-offset 2
+   web-mode-css-indent-offset 2
+   web-mode-code-indent-offset 2
+   web-mode-attr-indent-offset 2)
+
+  (setq web-mode-engines-alist
+        '(("django" . "\\.html\\'"))
+        )
+
+  (with-eval-after-load 'org (setq org-agenda-files
+                                   '("~/org/")))
+
   ;; disable jshint since we prefer eslint checking
   ;; (setq-default flycheck-disabled-checkers
   ;;               (append flycheck-disabled-checkers
   ;;                       '(javascript-jshint)))
-
-  ;; Make linums relative by default
-  (with-eval-after-load 'linum
-    (linum-relative-toggle))
+  (defun my/use-eslint-from-node-modules ()
+    (let* ((root (locate-dominating-file
+                  (or (buffer-file-name) default-directory)
+                  (lambda (dir) (file-executable-p
+                                 (expand-file-name "node_modules/.bin/eslint"
+                                                   dir)))))
+           (eslint (and root
+                        (expand-file-name "node_modules/.bin/eslint"
+                                          root))))
+      (when (and eslint (file-executable-p eslint))
+        (setq-local flycheck-javascript-eslint-executable eslint))))
+  (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
 
   (setq require-final-newline t)
   (setq mode-require-final-newline t)
 
+  (turn-on-fci-mode)
   ;; (spacemacs/helm-gtags-define-keys-for-mode 'python-mode)
 )
 
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(evil-want-Y-yank-to-eol t)
+ '(package-selected-packages
+   (quote
+    (white-sand-theme symon string-inflection rebecca-theme password-generator godoctor go-rename evil-org evil-lion dante sql-indent terraform-mode hcl-mode browse-at-remote pony-mode flycheck-gometalinter wgrep smex ivy-purpose ivy-hydra counsel-projectile counsel swiper ivy evil-snipe rjsx-mode eslintd-fix add-node-modules-path rainbow-mode rainbow-identifiers color-identifiers-mode winum madhat2r-theme helm-purpose window-purpose imenu-list fuzzy mmm-jinja2 mmm-mode editorconfig autothemer haml-mode pug-mode spinner org hide-comnt go-guru highlight bind-map yaml-mode dockerfile-mode docker tablist docker-tramp auctex-latexmk doom-dark-theme company-auctex auctex yapfify uuidgen osx-dictionary org-projectile org-download livid-mode skewer-mode simple-httpd live-py-mode link-hint intero hlint-refactor helm-hoogle git-link eyebrowse evil-visual-mark-mode evil-unimpaired evil-ediff eshell-z dumb-jump darkokai-theme company-ghci column-enforce-mode doom-themes all-the-icons doom-one-theme request zenburn-theme xterm-color window-numbering web-mode ujelly-theme twilight-anti-bright-theme toc-org systemd spacemacs-theme spaceline powerline planet-theme phpunit persp-mode orgit organic-green-theme org-pomodoro org-plus-contrib omtose-phellack-theme neotree naquadah-theme monokai-theme moe-theme markdown-toc markdown-mode majapahit-theme magit-gitflow leuven-theme less-css-mode ledger-mode json-mode js-doc jazz-theme info+ hl-todo hindent highlight-numbers helm-projectile helm-make projectile helm-descbinds helm-ag grandshell-theme gitconfig-mode git-messenger farmhouse-theme expand-region exec-path-from-shell evil-mc evil-matchit evil-magit magit magit-popup evil-exchange eshell-prompt-extras drupal-mode dracula-theme diff-hl darktooth-theme company-tern tern company-anaconda color-theme-sanityinc-tomorrow coffee-mode badwolf-theme auto-yasnippet auto-compile apropospriate-theme anti-zenburn-theme anaconda-mode ace-link auto-complete avy ghc anzu iedit smartparens haskell-mode flycheck git-gutter git-commit with-editor go-mode company helm popup helm-core async multiple-cursors js2-mode hydra yasnippet php-mode f s dash quelpa package-build use-package which-key evil zonokai-theme zen-and-art-theme ws-butler web-beautify volatile-highlights vagrant-tramp vagrant undo-tree underwater-theme twilight-theme twilight-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smooth-scrolling smeargle slim-mode shm shell-pop seti-theme scss-mode sass-mode salt-mode reverse-theme reveal-in-osx-finder restart-emacs rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-yapf py-isort purple-haze-theme professional-theme popwin pkg-info pip-requirements phpcbf php-extras php-auto-yasnippets phoenix-dark-pink-theme phoenix-dark-mono-theme pcre2el pbcopy pastels-on-dark-theme parent-mode paradox page-break-lines packed osx-trash org-repo-todo org-present org-bullets open-junk-file oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme mustang-theme multi-term move-text monochrome-theme molokai-theme minimal-theme material-theme macrostep lush-theme lorem-ipsum linum-relative light-soap-theme launchctl json-snatcher json-reformat js2-refactor jbeans-theme jade-mode ir-black-theme inkpot-theme indent-guide ido-vertical-mode hy-mode hungry-delete htmlize highlight-parentheses highlight-indentation heroku-theme hemisu-theme help-fns+ helm-themes helm-swoop helm-pydoc helm-mode-manager helm-gitignore helm-flx helm-css-scss helm-company helm-c-yasnippet hc-zenburn-theme haskell-snippets gruvbox-theme gruber-darker-theme goto-chg gotham-theme google-translate golden-ratio go-eldoc gnuplot gitattributes-mode git-timemachine git-gutter-fringe git-gutter-fringe+ gh-md gandalf-theme flycheck-pos-tip flycheck-ledger flycheck-haskell flx-ido flatui-theme flatland-theme firebelly-theme fill-column-indicator fancy-battery evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-lisp-state evil-indent-plus evil-iedit-state evil-escape evil-commentary evil-args evil-anzu eval-sexp-fu espresso-theme esh-help emmet-mode elisp-slime-nav django-theme diminish define-word dash-functional darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme company-web company-statistics company-quickhelp company-go company-ghc company-cabal colorsarenice-theme color-theme-sanityinc-solarized cmm-mode clues-theme clean-aindent-mode cherry-blossom-theme busybee-theme buffer-move bubbleberry-theme bracketed-paste birds-of-paradise-plus-theme bind-key auto-highlight-symbol ample-zen-theme ample-theme alert alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-jump-helm-line ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
