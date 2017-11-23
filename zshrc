@@ -74,18 +74,17 @@ export LANG=en_US.UTF-8
 DEFAULT_USER="dennis"
 export TERM=xterm-256color
 export HOMEBREW_INSTALL_BADGE="🤖"
-export EDITOR=vim
+export EDITOR=nvim
 export PODFILE_TYPE=development
 
 export GOPATH=$HOME/Src/go
+export GOENV_ROOT="$HOME/.goenv"
 
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$PATH:$GOPATH/bin
-export PATH=/usr/texbin:$PATH
-
-export DOCKER_HOST=tcp://192.168.59.103:2376
-export DOCKER_CERT_PATH=$HOME/.boot2docker/certs/boot2docker-vm
-export DOCKER_TLS_VERIFY=1
+export PATH="$GOENV_ROOT/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH=/Library/TeX/texbin:$PATH
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -103,10 +102,17 @@ alias tml="tmux list-sessions"
 alias tma="tmux attach-session"
 alias tmk="tmux kill-session -t"
 alias gmacs="open -a Emacs"
+alias ee="open -a Emacs"
+
+source $HOME/.dockerfunc
 
 export WORKON_HOME=$HOME/.virtualenvs
 source /usr/local/bin/virtualenvwrapper_lazy.sh
 
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+source `which activate.sh`
 
-[ -f ~/.nix-profile/etc/profile.d/nix.sh ] && source ~/.nix-profile/etc/profile.d/nix.sh
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+if which pyenv > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+if which goenv > /dev/null; then eval "$(goenv init -)"; fi
+if which nodenv > /dev/null; then eval "$(nodenv init -)"; fi
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
