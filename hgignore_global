@@ -6,3 +6,4 @@ syntax: glob
 .ropeproject
 .DS_Store
 .tern-port
+.projectile

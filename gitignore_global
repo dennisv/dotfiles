@@ -1,4 +1,7 @@
 *~
 *.swp
 .DS_Store
+.vscode/
 .ropeproject/
+.env
+*.ipynb
