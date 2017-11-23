@@ -19,6 +19,7 @@ trustExitCode = true
 
 [merge]
 tool = Kaleidoscope
+	ff = only
 
 [difftool "Kaleidoscope"]
 cmd = ksdiff --partial-changeset --relative-path "$MERGED" -- "$LOCAL" "$REMOTE"
@@ -30,9 +31,12 @@ cmd = ksdiff --merge --output "$MERGED" --base "$BASE" -- "$LOCAL" --snapshot "$
 trustExitCode = true
 [core]
 	excludesfile = /Users/dennis/.gitignore_global
+	pager = diff-so-fancy | less --tabs=4 -RFX
 [difftool "sourcetree"]
 	cmd = /usr/local/bin/ksdiff -w \"$LOCAL\" \"$REMOTE\"
-	path = 
+	path =
 [mergetool "sourcetree"]
 	cmd = /usr/local/bin/ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
 	trustExitCode = true
+[pull]
+	ff = only
