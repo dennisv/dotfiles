@@ -548,7 +548,7 @@ before packages are loaded."
 
   (setq web-mode-engines-alist
         '(("django" . "\\.html\\'")
-          ("riot" . "\\.tag\\.")))
+          ("riot" . "\\.tag\\")))
 
   (with-eval-after-load 'org (setq org-agenda-files
                                    '("~/org/")))
