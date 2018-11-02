@@ -534,7 +534,7 @@ before packages are loaded."
    typescript-indent-level 2)
 
   (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
-  (add-hook `python-mode-hook `blacken-mode)
+  (add-hook 'python-mode-hook 'blacken-mode)
 
   (add-hook 'js2-mode-hook 'prettier-js-mode)
   (add-hook 'react-mode-hook 'prettier-js-mode)
