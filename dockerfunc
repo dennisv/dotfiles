@@ -9,33 +9,8 @@ http(){
 		--log-driver none \
 		${DOCKER_REPO_PREFIX}/httpie "$@"
 }
-ncmpc(){
-	del_stopped ncmpc
-
-	docker run --rm -it \
-		-e MPD_HOST=music.dyn.eyo.nl \
-		--name ncmpc \
-		${DOCKER_REPO_PREFIX}/ncmpc "$@"
-}
 nmap(){
 	docker run --rm -it \
 		--net host \
 		${DOCKER_REPO_PREFIX}/nmap "$@"
-}
-pandoc(){
-	local file=$1
-echo $file
-	local lfile
-	lfile=$(greadlink -m "$(pwd)/${file}")
-	local rfile
-	rfile=$(greadlink -m "/$(basename "$file")")
-	local args=${*:1:${#@}-1}
-echo $lfile
-echo $rfile
-
-	docker run --rm \
-		-v "${lfile}:${rfile}" \
-		-v /tmp:/tmp \
-		--name pandoc \
-		${DOCKER_REPO_PREFIX}/pandoc "${args}" "${rfile}"
 }

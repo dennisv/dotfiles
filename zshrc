@@ -83,8 +83,10 @@ export GOENV_ROOT="$HOME/.goenv"
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$PATH:$GOPATH/bin
 export PATH="$GOENV_ROOT/bin:$PATH"
+export PATH=/usr/local/opt/texinfo/bin:$PATH
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH=/Library/TeX/texbin:$PATH
+export PATH="/usr/local/opt/avr-gcc@7/bin:$PATH"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -95,14 +97,16 @@ export PATH=/Library/TeX/texbin:$PATH
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias got="ps aux | grep"
-alias dj="python manage.py"
-alias dr="dj runserver"
 alias tmux="tmux -u"
 alias tml="tmux list-sessions"
 alias tma="tmux attach-session"
 alias tmk="tmux kill-session -t"
-alias gmacs="open -a Emacs"
 alias ee="open -a Emacs"
+alias sshno='ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no"'
+
+source $HOME/.oh-my-zsh/custom/plugins/zsh-histdb/sqlite-history.zsh
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd histdb-update-outcome
 
 source $HOME/.dockerfunc
 
