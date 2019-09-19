@@ -5,3 +5,7 @@
 .ropeproject/
 .env
 *.ipynb
+ci/vars.yml
+docker-compose.override.yml
+.go-version
+.python-version
