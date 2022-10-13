@@ -11,8 +11,8 @@ repos=(
 )
 plugin-load $repos
 
-. $HOME/.asdf/asdf.sh
-fpath=(${ASDF_DIR}/completions $fpath)
+[ -f $HOME/.asdf/asdf.sh ] && source $HOME/.asdf/asdf.sh
+#fpath=(${ASDF_DIR}/completions $fpath)
 
 autoload -Uz add-zsh-hook
 source $ZPLUGINDIR/zsh-histdb/histdb-interactive.zsh
@@ -44,14 +44,17 @@ MNML_RPROMPT=()
 
 export PATH="$HOME/bin:$PATH"
 
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
+alias ls='ls --color=auto'
 
 export FLYCTL_INSTALL="$HOME/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
 eval "$(direnv hook zsh)"
 
+if [[ -f $HOME/.pyenv ]]; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init --path)"
+fi
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 if which pyenv > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
