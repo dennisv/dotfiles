@@ -4,9 +4,7 @@
 
 (setq display-line-numbers-type nil)
 
-(use-package! doom-themes)
-
-(setq doom-theme 'doom-nord-light)
+(setq doom-theme 'doom-tomorrow-night)
 (setq doom-font (font-spec :family "Iosevka" :size 13))
 
 (set-email-account! "personal"
@@ -29,17 +27,14 @@
 ;;             html-mode
 ;;             mhtml-mode))
 
-(setq web-mode-engines-alist
-      '(("django" . "/\\templates\\/.*\\.html\\'"))
-      )
+;; (setq web-mode-engines-alist
+;;       '(("django" . "/\\templates\\/.*\\.html\\'"))
+;;       )
 
 ;; (def-package! poetry
 ;;   :after python
 ;;   :config
 ;;   (poetry-tracking-mode))
-
-;; (def-package! lsp-python-ms
-;;   :after lsp-mode)
 
 (use-package! py-isort
   :after python
@@ -47,7 +42,3 @@
   (add-hook 'before-save-hook 'py-isort-before-save))
 
 (setq lsp-pyright-venv-path (concat (getenv "HOME") "/.pyenv/versions"))
-
-(use-package! graphql-mode
-  :mode "\\.gql\\'"
-  :config (setq-hook! 'graphql-mode-hook tab-width graphql-indent-level))
