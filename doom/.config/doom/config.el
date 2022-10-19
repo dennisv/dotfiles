@@ -31,6 +31,9 @@
 ;;       '(("django" . "/\\templates\\/.*\\.html\\'"))
 ;;       )
 
+(after! lsp-haskell
+  (setq lsp-haskell-formatting-provider "brittany"))
+
 ;; (def-package! poetry
 ;;   :after python
 ;;   :config
