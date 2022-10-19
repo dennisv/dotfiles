@@ -1,0 +1,22 @@
+cradle:
+  stack:
+    - path: "xmonad-contrib/./"
+      component: "xmonad-contrib:lib"
+
+    - path: "xmonad-contrib/tests"
+      component: "xmonad-contrib:test:tests"
+
+    - path: "xmonad-contrib/."
+      component: "xmonad-contrib:test:tests"
+
+    - path: "xmonad/src"
+      component: "xmonad:lib"
+
+    - path: "xmonad/./Main.hs"
+      component: "xmonad:exe:xmonad"
+
+    - path: "xmonad/tests"
+      component: "xmonad:test:properties"
+
+    - path: "xmonad.hs"
+      component: "xmonad-contrib:lib"
