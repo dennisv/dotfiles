@@ -1,31 +1,63 @@
 import           XMonad
 import qualified XMonad.StackSet               as W
 
-import           Data.Monoid
+import           Data.Monoid                    ( Endo )
 import           XMonad.Actions.SpawnOn         ( spawnOn )
 import           XMonad.Hooks.EwmhDesktops      ( addEwmhWorkspaceSort
                                                 , ewmh
                                                 , ewmhFullscreen
                                                 )
-import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.ManageDocks       ( AvoidStruts
+                                                , Direction2D(D, L, R, U)
+                                                , avoidStruts
+                                                , docks
+                                                )
 import           XMonad.Hooks.ManageHelpers     ( doFullFloat
                                                 , isFullscreen
                                                 )
-import           XMonad.Hooks.SetWMName
-import           XMonad.Layout.BoringWindows
-import           XMonad.Layout.Decoration
+import           XMonad.Hooks.SetWMName         ( setWMName )
+import           XMonad.Layout.BoringWindows    ( BoringWindows
+                                                , boringWindows
+                                                , focusDown
+                                                , focusUp
+                                                , swapDown
+                                                , swapUp
+                                                )
+import           XMonad.Layout.Decoration       ( Decoration
+                                                , DefaultShrinker
+                                                )
 import           XMonad.Layout.LayoutModifier   ( ModifiedLayout )
-import           XMonad.Layout.NoBorders
-import           XMonad.Layout.ResizableTile
-import           XMonad.Layout.Simplest
-import           XMonad.Layout.Spacing
-import           XMonad.Layout.SubLayouts
-import           XMonad.Layout.Tabbed
-import           XMonad.Layout.WindowNavigation
-import           XMonad.Util.Cursor
+import           XMonad.Layout.NoBorders        ( SmartBorder
+                                                , WithBorder
+                                                , noBorders
+                                                , smartBorders
+                                                )
+import           XMonad.Layout.ResizableTile    ( ResizableTall(ResizableTall) )
+import           XMonad.Layout.Simplest         ( Simplest )
+import           XMonad.Layout.Spacing          ( Spacing
+                                                , spacing
+                                                )
+import           XMonad.Layout.SubLayouts       ( GroupMsg(MergeAll, UnMerge)
+                                                , Sublayout
+                                                , onGroup
+                                                , pullGroup
+                                                , subTabbed
+                                                )
+import           XMonad.Layout.Tabbed           ( TabbedDecoration )
+import           XMonad.Layout.WindowNavigation ( WindowNavigation
+                                                , windowNavigation
+                                                )
+import           XMonad.Util.Cursor             ( setDefaultCursor )
 import           XMonad.Util.EZConfig           ( additionalKeysP )
-import           XMonad.Util.NamedScratchpad
-import           XMonad.Util.SpawnOnce
+import           XMonad.Util.NamedScratchpad    ( NamedScratchpad(NS)
+                                                , customFloating
+                                                , namedScratchpadAction
+                                                , namedScratchpadManageHook
+                                                , scratchpadWorkspaceTag
+                                                )
+import           XMonad.Util.SpawnOnce          ( manageSpawn
+                                                , spawnOnce
+                                                )
 import           XMonad.Util.WorkspaceCompare   ( WorkspaceSort
                                                 , filterOutWs
                                                 )
@@ -141,7 +173,7 @@ myScratchpads =
        (customFloating $ W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
   ]
 
-myManageHook :: Query (Data.Monoid.Endo WindowSet)
+myManageHook :: Query (Endo WindowSet)
 myManageHook = composeAll [isFullscreen --> doFullFloat]
 
 launchRofi :: MonadIO m => m ()
