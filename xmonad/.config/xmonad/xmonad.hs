@@ -23,10 +23,10 @@ import           XMonad.Hooks.ManageDocks       ( AvoidStruts
                                                 , avoidStruts
                                                 , docks
                                                 )
-import           XMonad.Hooks.ManageHelpers     ( doFullFloat
+import           XMonad.Hooks.ManageHelpers     ( doCenterFloat
+                                                , doFullFloat
                                                 , isFullscreen
                                                 )
-import           XMonad.Hooks.SetWMName         ( setWMName )
 import           XMonad.Layout.BoringWindows    ( BoringWindows
                                                 , boringWindows
                                                 , focusDown
@@ -50,7 +50,11 @@ import           XMonad.Layout.Simplest         ( Simplest(Simplest) )
 import           XMonad.Layout.Spacing          ( Spacing
                                                 , smartSpacingWithEdge
                                                 )
-import           XMonad.Layout.SubLayouts       ( GroupMsg(MergeAll, UnMerge)
+import           XMonad.Layout.SubLayouts       ( GroupMsg
+                                                  ( MergeAll
+                                                  , UnMerge
+                                                  , UnMergeAll
+                                                  )
                                                 , Sublayout
                                                 , onGroup
                                                 , pullGroup
@@ -117,11 +121,10 @@ filterList = [scratchpadWorkspaceTag]
 
 myStartupHook :: X ()
 myStartupHook = do
-  setWMName "LG3D"
   setDefaultCursor xC_left_ptr
 
   spawnOnce "polybar top &"
-  spawn "nitrogen --restore &"
+  spawn "wal"
 
 
 myLayoutHook
@@ -202,7 +205,11 @@ myTabTheme = def
 
 myScratchpads :: [NamedScratchpad]
 myScratchpads =
-  [ NS "telegram"
+  [ NS "mu4e"
+       "emacs --name=mu4e --title=@mail -f mu4e"
+       (appName =? "mu4e")
+       (customFloating $ W.RationalRect (1 / 6) (1 / 6) (2 / 3) (2 / 3))
+  , NS "telegram"
        "telegram-desktop"
        (appName =? "telegram-desktop")
        (customFloating $ W.RationalRect (2 / 3) (1 / 20) (1 / 3) (9 / 10))
@@ -217,7 +224,8 @@ myScratchpads =
   ]
 
 myManageHook :: Query (Endo WindowSet)
-myManageHook = composeAll [isFullscreen --> doFullFloat]
+myManageHook = composeAll
+  [appName =? "1password" --> doCenterFloat, isFullscreen --> doFullFloat]
 
 launchRofi :: MonadIO m => m ()
 launchRofi = spawn "rofi -show drun"
@@ -228,24 +236,26 @@ launchShutdown =
 
 myKeys :: [(String, X ())]
 myKeys =
-  [ ("M-j"  , focusDown)
-  , ("M-k"  , focusUp)
-  , ("M-S-j", swapDown)
-  , ("M-S-k", swapUp)
-  , ("M-C-h", sendMessage $ pullGroup L)
-  , ("M-C-j", sendMessage $ pullGroup D)
-  , ("M-C-k", sendMessage $ pullGroup U)
-  , ("M-C-l", sendMessage $ pullGroup R)
-  , ("M-C-m", withFocused (sendMessage . MergeAll))
-  , ("M-C-u", withFocused (sendMessage . UnMerge))
-  , ("M-C-,", onGroup W.focusDown')
-  , ("M-C-.", onGroup W.focusUp')
-  , ("M-b"  , spawnOn "2" myBrowser)
+  [ ("M-j"    , focusDown)
+  , ("M-k"    , focusUp)
+  , ("M-S-j"  , swapDown)
+  , ("M-S-k"  , swapUp)
+  , ("M-C-h"  , sendMessage $ pullGroup L)
+  , ("M-C-j"  , sendMessage $ pullGroup D)
+  , ("M-C-k"  , sendMessage $ pullGroup U)
+  , ("M-C-l"  , sendMessage $ pullGroup R)
+  , ("M-C-m"  , withFocused (sendMessage . MergeAll))
+  , ("M-C-u"  , withFocused (sendMessage . UnMerge))
+  , ("M-C-S-u", withFocused (sendMessage . UnMergeAll))
+  , ("M-C-,"  , onGroup W.focusDown')
+  , ("M-C-."  , onGroup W.focusUp')
+  , ("M-b"    , spawnOn "2" myBrowser)
+  , ("M-S-m", namedScratchpadAction myScratchpads "mu4e")
   , ("M-S-c", namedScratchpadAction myScratchpads "telegram")
   , ("M-S-v", namedScratchpadAction myScratchpads "freetube")
   , ("M-S-t", namedScratchpadAction myScratchpads "btop")
-  , ("M-p"  , launchRofi)
-  , ("M-s"  , launchShutdown)
+  , ("M-p"    , launchRofi)
+  , ("M-s"    , launchShutdown)
   ]
 
 {- |

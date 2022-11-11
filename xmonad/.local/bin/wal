@@ -1,0 +1,45 @@
+#!/bin/sh
+
+dir=$(xdg-user-dir PICTURES)/Wallpapers
+[ ! -d "$dir" ] && mkdir -p "$dir"
+restore=${XDG_CACHE_DIR:-$HOME/.cache}/wallpaper.sh
+
+_wallpaper() {
+        img=$*
+        if ! echo "$img" | grep -q -i "home"; then
+                img=$(echo "$img" | sed "s|^|$HOME/|")
+        fi
+        hsetroot -cover "$img"
+        tee -a <<-END >"$restore"
+	#!/bin/sh
+	hsetroot -cover $img
+	END
+        [ -x "$restore" ] || chmod +x "$restore"
+}
+
+_random() {
+        img=$(find "$dir" -type f | grep -v -E 'git|README.md' | shuf -n1)
+        hsetroot -cover "$img"
+}
+
+_daemon() {
+        while :; do
+                _random
+                sleep 10m
+        done
+}
+
+_download() {
+        link=$*
+        clean=$(echo "$link" | sed 's/\.jpg.*/.jpg/;s/\.png.*/.png/')
+        curl "$clean" -o "$dir"/"${clean##*/}"
+}
+
+case $1 in
+        *.png | *.jpg) _wallpaper "$1" ;;
+        random) _random ;;
+        daemon) _daemon ;;
+        pull) _download "$2" ;;
+        *) $restore || _random ;;
+esac
+
