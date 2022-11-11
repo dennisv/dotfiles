@@ -150,7 +150,7 @@
         +pyenv)
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
-       ;;rest              ; Emacs as a REST client
+       rest              ; Emacs as a REST client
        ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala             ; java, but good
@@ -165,7 +165,7 @@
        yaml              ; JSON, but readable
 
        :email
-       (mu4e +gmail)       ; WIP
+       (:if (executable-find "mu") (mu4e +org +gmail))
        ;;notmuch             ; WIP
        ;;(wanderlust +gmail) ; WIP
 
