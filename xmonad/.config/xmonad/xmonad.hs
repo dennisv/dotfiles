@@ -251,7 +251,7 @@ myKeys =
   , ("M-C-."  , onGroup W.focusUp')
   , ("M-b"    , spawnOn "2" myBrowser)
   , ("M-S-m", namedScratchpadAction myScratchpads "mu4e")
-  , ("M-S-c", namedScratchpadAction myScratchpads "telegram")
+  , ("M-S-n", namedScratchpadAction myScratchpads "telegram")
   , ("M-S-v", namedScratchpadAction myScratchpads "freetube")
   , ("M-S-t", namedScratchpadAction myScratchpads "btop")
   , ("M-p"    , launchRofi)
