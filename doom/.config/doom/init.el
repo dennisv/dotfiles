@@ -18,6 +18,7 @@
        ;;ido               ; the other *other* search engine...
        (ivy              ; a search engine for love and life
         +childframe)
+       ;;vertico           ; the search engine of the future
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -94,6 +95,7 @@
        ;;rgb               ; creating color strings
        ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
+       tree-sitter       ; syntax and parsing, sitting in a tree...
        ;;upload            ; map local to remote projects via ssh/ftp
        ;;wakatime
 
@@ -147,7 +149,8 @@
        (python           ; beautiful is better than ugly
         +lsp
         +pyright
-        +pyenv)
+        +poetry
+        +tree-sitter)
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        rest              ; Emacs as a REST client
