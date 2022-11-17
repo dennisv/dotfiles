@@ -45,7 +45,13 @@ import           XMonad.Layout.NoBorders        ( SmartBorder
                                                 , noBorders
                                                 , smartBorders
                                                 )
+import           XMonad.Layout.PerScreen        ( PerScreen
+                                                , ifWider
+                                                )
 import           XMonad.Layout.ResizableTile    ( ResizableTall(ResizableTall) )
+import           XMonad.Layout.ShowWName        ( ShowWName
+                                                , showWName
+                                                )
 import           XMonad.Layout.Simplest         ( Simplest(Simplest) )
 import           XMonad.Layout.Spacing          ( Spacing
                                                 , smartSpacingWithEdge
@@ -63,6 +69,7 @@ import           XMonad.Layout.SubLayouts       ( GroupMsg
 import           XMonad.Layout.Tabbed           ( TabbedDecoration
                                                 , addTabs
                                                 )
+import           XMonad.Layout.ThreeColumns     ( ThreeCol(ThreeColMid) )
 import           XMonad.Layout.WindowNavigation ( WindowNavigation
                                                 , configurableNavigation
                                                 , noNavigateBorders
@@ -82,6 +89,7 @@ import           XMonad.Util.SpawnOnce          ( manageSpawn
 import           XMonad.Util.WorkspaceCompare   ( WorkspaceSort
                                                 , filterOutWs
                                                 )
+
 
 myTerminal :: String
 myTerminal = "alacritty "
@@ -129,37 +137,23 @@ myStartupHook = do
 
 myLayoutHook
   :: ModifiedLayout
-       AvoidStruts
-       ( Choose
-           ( ModifiedLayout
-               SmartBorder
-               ( ModifiedLayout
-                   BoringWindows
-                   ( ModifiedLayout
-                       WindowNavigation
-                       ( ModifiedLayout
-                           (Decoration TabbedDecoration DefaultShrinker)
-                           ( ModifiedLayout
-                               (Sublayout Simplest)
-                               (ModifiedLayout Spacing ResizableTall)
-                           )
-                       )
-                   )
-               )
-           )
+       ShowWName
+       ( ModifiedLayout
+           AvoidStruts
            ( Choose
-               ( Mirror
+               ( ModifiedLayout
+                   SmartBorder
                    ( ModifiedLayout
-                       SmartBorder
+                       BoringWindows
                        ( ModifiedLayout
-                           BoringWindows
+                           WindowNavigation
                            ( ModifiedLayout
-                               WindowNavigation
+                               (Decoration TabbedDecoration DefaultShrinker)
                                ( ModifiedLayout
-                                   (Decoration TabbedDecoration DefaultShrinker)
+                                   (Sublayout Simplest)
                                    ( ModifiedLayout
-                                       (Sublayout Simplest)
-                                       (ModifiedLayout Spacing ResizableTall)
+                                       Spacing
+                                       (PerScreen ThreeCol ResizableTall)
                                    )
                                )
                            )
@@ -170,23 +164,27 @@ myLayoutHook
            )
        )
        Window
-myLayoutHook = avoidStruts myLayouts
+myLayoutHook = showWName $ avoidStruts myLayouts
  where
-  myLayouts = tiled ||| Mirror tiled ||| full
+  myLayouts     = flex ||| full
 
-  tiled =
+  smallMonWidth = 2560
+  flex =
     smartBorders
       . boringWindows
       . configurableNavigation noNavigateBorders
       . addTabs shrinkText myTabTheme
       . subLayout [] Simplest
       . smartSpacingWithEdge 4
-      $ ResizableTall nmaster delta ratio []
-  full    = noBorders Full
+      $ ifWider smallMonWidth wideLayouts standardLayouts
 
-  nmaster = 1
-  delta   = 3 / 100
-  ratio   = toRational (2 / (1 + sqrt 5 :: Double))
+  wideLayouts     = ThreeColMid nmaster delta (1 / 2)
+  standardLayouts = ResizableTall nmaster delta ratio []
+  full            = noBorders Full
+
+  nmaster         = 1
+  delta           = 3 / 100
+  ratio           = toRational (2 / (1 + sqrt 5 :: Double))
 
 myTabTheme :: Theme
 myTabTheme = def
