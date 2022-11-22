@@ -11,8 +11,10 @@ repos=(
 )
 plugin-load $repos
 
-[ -f $HOME/.asdf/asdf.sh ] && source $HOME/.asdf/asdf.sh
-#fpath=(${ASDF_DIR}/completions $fpath)
+if [[ -f $HOME/.asdf/asdf.sh ]]; then
+  source $HOME/.asdf/asdf.sh
+  fpath=(${ASDF_DIR}/completions $fpath)
+fi
 
 autoload -Uz add-zsh-hook
 source $ZPLUGINDIR/zsh-histdb/histdb-interactive.zsh
