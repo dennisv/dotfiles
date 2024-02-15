@@ -4,7 +4,8 @@
 
 (setq display-line-numbers-type nil)
 
-(setq doom-theme 'doom-tomorrow-night)
+;; (setq doom-theme 'doom-tomorrow-night)
+(setq doom-theme 'doom-nord-light)
 (setq doom-font (font-spec :family "Iosevka" :size 13))
 
 (after! mu4e
@@ -75,6 +76,10 @@
 ;;   :after python
 ;;   :config
 ;;   (poetry-tracking-mode))
+
+(after! poetry
+  (remove-hook 'python-mode-hook #'poetry-tracking-mode)
+  (add-hook 'python-mode-hook 'poetry-track-virtualenv))
 
 (use-package! py-isort
   :after python

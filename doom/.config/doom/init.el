@@ -13,12 +13,15 @@
        ;;japanese
 
        :completion
-       company           ; the ultimate code completion backend
+       (company           ; the ultimate code completion backend
+        +childframe)
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy              ; a search engine for love and life
-        +childframe)
-       ;;vertico           ; the search engine of the future
+       ;;(ivy              ; a search engine for love and life
+       ;; +childframe)
+       (vertico           ; the search engine of the future
+        +childframe
+        +icons)
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -58,8 +61,8 @@
 
        :emacs
        (dired            ; making dired pretty [functional]
-       ;;+ranger         ; bringing the goodness of ranger to dired
-       +icons          ; colorful icons for dired-mode
+        ;;+ranger         ; bringing the goodness of ranger to dired
+        +icons          ; colorful icons for dired-mode
         )
        electric          ; smarter, keyword-based electric-indent
        vc                ; version-control and Emacs, sitting in a tree
