@@ -53,10 +53,4 @@ export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
 eval "$(direnv hook zsh)"
 
-if [[ -f $HOME/.pyenv ]]; then
-  export PYENV_ROOT="$HOME/.pyenv"
-  export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init --path)"
-fi
-if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
-if which pyenv > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+source /home/dennis/.config/broot/launcher/bash/br
