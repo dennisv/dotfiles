@@ -74,7 +74,8 @@
 
        :checkers
        ;;grammar
-       syntax            ; tasing you for every semicolon you forget
+       (syntax            ; tasing you for every semicolon you forget
+        +flymake)
        ;;spell           ; tasing you for misspelling mispelling
 
        :tools

@@ -6,7 +6,7 @@
 
 ;; (setq doom-theme 'doom-tomorrow-night)
 (setq doom-theme 'doom-nord-light)
-(setq doom-font (font-spec :family "Iosevka" :size 13))
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 12))
 
 (after! mu4e
   (with-eval-after-load "mm-decode"
@@ -81,9 +81,29 @@
   (remove-hook 'python-mode-hook #'poetry-tracking-mode)
   (add-hook 'python-mode-hook 'poetry-track-virtualenv))
 
+(setq-hook! 'python-mode-hook +format-with 'ruff)
+
 (use-package! py-isort
   :after python
   :config
   (add-hook 'before-save-hook 'py-isort-before-save))
+
+(after! lsp-mode
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("ruff" "server"))
+                    :major-modes '(python-mode)
+                    :priority -2
+                    :add-on? t
+                    :multi-root t
+                    :server-id 'ruff-server
+                                        ;(lambda ()
+                                        ;  (list :settings
+                                        ;        (list :showNotifications "off"
+                                        ;              :organizeImports (lsp-json-bool t)
+                                        ;              :fixAll (lsp-json-bool t))))
+                    )
+   )
+  (setq! lsp-disabled-clients '(python-mode . (ruff-lsp)))
+  )
 
 (setq lsp-pyright-venv-path (concat (getenv "HOME") "/.pyenv/versions"))
