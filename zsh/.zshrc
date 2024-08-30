@@ -53,4 +53,7 @@ export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
 eval "$(direnv hook zsh)"
 
+# Scaleway CLI autocomplete initialization.
+eval "$(scw autocomplete script shell=zsh)"
+
 source /home/dennis/.config/broot/launcher/bash/br
