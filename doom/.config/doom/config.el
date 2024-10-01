@@ -96,11 +96,14 @@
                     :add-on? t
                     :multi-root t
                     :server-id 'ruff-server
-                                        ;(lambda ()
-                                        ;  (list :settings
-                                        ;        (list :showNotifications "off"
-                                        ;              :organizeImports (lsp-json-bool t)
-                                        ;              :fixAll (lsp-json-bool t))))
+                    :initialization-options
+                    (lambda ()
+                      (list :settings
+                            (list :logLevel "warn"
+                                  :showNotifications "off"
+                                  :organizeImports (lsp-json-bool t)
+                                  :fixAll (lsp-json-bool t)
+                                  :importStrategy "fromEnvironment")))
                     )
    )
   (setq! lsp-disabled-clients '(python-mode . (ruff-lsp)))
