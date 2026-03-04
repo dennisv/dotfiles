@@ -39,5 +39,14 @@
       "space w d": "pane::CloseActiveItem",
       "space s g": "workspace::NewSearch"
     }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "w": "vim::NextSubwordStart",
+      "b": "vim::PreviousSubwordStart",
+      "e": "vim::NextSubwordEnd",
+      "g e": "vim::PreviousSubwordEnd"
+    }
   }
 ]
